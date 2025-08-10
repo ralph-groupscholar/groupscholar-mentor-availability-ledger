@@ -5,7 +5,8 @@ A Zig-powered CLI to track mentor availability windows, session bookings, and re
 ## Features
 - Capture mentor profiles with focus areas and time zones
 - Log availability windows and session bookings
-- Compute remaining session capacity across a time range
+- Compute remaining session capacity and utilization across a time range
+- Filterable booking listings by mentor, status, or time window
 - PostgreSQL-backed persistence for production use
 
 ## Tech Stack
@@ -58,7 +59,17 @@ Time inputs accept `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SS`.
   --start 2026-02-15T14:30:00 \
   --end 2026-02-15T15:00:00
 
+./zig-out/bin/groupscholar-mentor-availability-ledger booking list \
+  --mentor-id 1 \
+  --status scheduled \
+  --start 2026-02-15 \
+  --end 2026-02-20
+
 ./zig-out/bin/groupscholar-mentor-availability-ledger capacity range \
+  --start 2026-02-10 \
+  --end 2026-02-17
+
+./zig-out/bin/groupscholar-mentor-availability-ledger utilization range \
   --start 2026-02-10 \
   --end 2026-02-17
 ```
