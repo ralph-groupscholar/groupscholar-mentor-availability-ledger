@@ -24,7 +24,7 @@ zig build
 ```
 
 ## Database
-Set `DATABASE_URL` when running the CLI in production environments.
+Set `DATABASE_URL` when running the CLI in production environments (do not use the shared production database for local development).
 
 Initialize schema and seed data (run against the production database only):
 
