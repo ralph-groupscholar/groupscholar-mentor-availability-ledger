@@ -34,6 +34,21 @@ pub const list_bookings =
     "and ($4 = '' or b.start_ts < $4::timestamptz) " ++
     "order by b.start_ts;";
 
+pub const booking_capacity_check =
+    "select a.id, a.max_sessions, coalesce(count(b.id), 0) as booked_sessions " ++
+    "from groupscholar_mentor_availability.availability_windows a " ++
+    "left join groupscholar_mentor_availability.bookings b " ++
+    "on b.mentor_id = a.mentor_id " ++
+    "and b.start_ts >= a.start_ts " ++
+    "and b.start_ts < a.end_ts " ++
+    "and b.status != 'cancelled' " ++
+    "where a.mentor_id = $1::bigint " ++
+    "and a.start_ts <= $2::timestamptz " ++
+    "and a.end_ts >= $3::timestamptz " ++
+    "group by a.id, a.max_sessions " ++
+    "order by a.start_ts " ++
+    "limit 1;";
+
 pub const capacity_range =
     "select m.id, m.name, " ++
     "coalesce(sum(a.max_sessions), 0) as available_sessions, " ++

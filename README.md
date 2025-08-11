@@ -7,6 +7,7 @@ A Zig-powered CLI to track mentor availability windows, session bookings, and re
 - Log availability windows and session bookings
 - Compute remaining session capacity and utilization across a time range
 - Filterable booking listings by mentor, status, or time window
+- Prevent bookings outside availability or beyond session capacity
 - PostgreSQL-backed persistence for production use
 
 ## Tech Stack

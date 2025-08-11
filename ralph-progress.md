@@ -11,3 +11,8 @@
 - Added PostgreSQL schema and seed data scripts for mentors, availability, and bookings.
 - Implemented core CLI commands with libpq integration and basic validation tests.
 - Provisioned the production database schema and seeded sample mentor data.
+
+## 2026-02-08 08:29 EST
+- Added availability capacity validation to block overbooked or out-of-window sessions.
+- Introduced a booking capacity check query and wired it into booking creation.
+- Updated README to document the new booking guardrail.

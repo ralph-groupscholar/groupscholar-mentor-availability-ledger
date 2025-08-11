@@ -239,11 +239,33 @@ fn bookingAdd(conn: *db.Db, allocator: std.mem.Allocator, args: [][]const u8, wr
     const end = try normalizeTimestamp(allocator, end_raw);
     defer allocator.free(end);
     try ensureChronological(start, end);
+    try ensureBookingCapacity(conn, allocator, mentor_id, start, end);
 
     var result = try conn.query(allocator, sql.insert_booking, &.{ mentor_id, scholar, start, end, status });
     defer result.deinit();
 
     try writer.print("booking_id={s}\n", .{result.value(0, 0)});
+}
+
+fn ensureBookingCapacity(
+    conn: *db.Db,
+    allocator: std.mem.Allocator,
+    mentor_id: []const u8,
+    start: []const u8,
+    end: []const u8,
+) !void {
+    var result = try conn.query(allocator, sql.booking_capacity_check, &.{ mentor_id, start, end });
+    defer result.deinit();
+
+    if (result.rowCount() == 0) {
+        return error.NoAvailabilityWindow;
+    }
+
+    const max_sessions = try std.fmt.parseInt(u32, result.value(0, 1), 10);
+    const booked_sessions = try std.fmt.parseInt(u32, result.value(0, 2), 10);
+    if (booked_sessions >= max_sessions) {
+        return error.AvailabilityFull;
+    }
 }
 
 fn bookingList(conn: *db.Db, allocator: std.mem.Allocator, args: [][]const u8, writer: anytype) !void {
